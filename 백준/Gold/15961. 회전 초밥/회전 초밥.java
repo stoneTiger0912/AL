@@ -1,40 +1,58 @@
-import java.util.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
+
+/**
+ *덱을 이용하거나 슬라이싱 윈도우일 듯
+ */
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int N=Integer.parseInt(st.nextToken());
-        int d=Integer.parseInt(st.nextToken());
-        int k=Integer.parseInt(st.nextToken());
-        int c=Integer.parseInt(st.nextToken());
-        int[] A = new int[N];
-        int[] check = new int[d+1];
+	
+	static int maxResult;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		int N = Integer.parseInt(st.nextToken());
+		int maxNum = Integer.parseInt(st.nextToken());
+		int setNum = Integer.parseInt(st.nextToken());
+		int bonus = Integer.parseInt(st.nextToken());
 
-        for(int i=0;i<N;i++) A[i]=Integer.parseInt(br.readLine());
+		//시작이 0번째 부터 n번째까지 이고 maxNum개를 읽음 
+		int[] list = new int[N];
+		
+		int[] check = new int[maxNum+1];
+		
+		for(int i=0; i<N;i++) {
+			list[i] = Integer.parseInt(br.readLine());
+		}
+		
+		//초기에 세팅 
+		int cnt = 1;
+		check[bonus]++;
+		
+		for(int i=0; i<setNum;i++) {
+			if(check[list[i]]==0) cnt++;
+			check[list[i]]++;
+		}
+		
+		maxResult = cnt;
+		
+		for(int i=1;i<N;i++) {
+			if(check[list[i-1]]==1) cnt--;
 
-        int res=1;
-        check[c]++;
-        for(int i=0;i<k;i++) {
-            if(check[A[i]]==0) res++;
-            check[A[i]]++;
-        }
-
-        int cnt=res;
-        for(int i=1;i<N;i++) {
-            int pop = A[i-1];
-            check[pop]--;
-            if(check[pop]==0) cnt--;
-
-            int add = A[(i+k-1)%N];
-            if(check[add]==0) cnt++;
-            check[add]++;
-
-            res = Math.max(res,cnt);
-        }
-
-        System.out.println(res);
-    }
-
+			check[list[i-1]]--;
+			
+			int next = list[(i+setNum-1)%N];
+			
+			if(check[next]==0) cnt++;
+			check[next]++;
+			maxResult = Math.max(maxResult, cnt);
+		}
+		
+		System.out.println(maxResult);
+		
+	}
 }
