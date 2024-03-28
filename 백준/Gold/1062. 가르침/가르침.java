@@ -10,9 +10,10 @@ import java.util.StringTokenizer;
  *antarctica
  *
  *a, n, t, i, c는 이미 존재
- *31232kb 1000ms
  *비트마스킹을 활용하면 1/10로 줄일 수 있음
  *answer = 1<<a, n, t, i, c로 하교 비교시에 &비교하면 빠를듯
+ *
+ *11956kb 344ms
  */
 public class Main {
 
@@ -85,10 +86,13 @@ public class Main {
 			}
 		}
 
-		if(k < 5) {
-			System.out.println(0);
-			return;
-		}
+        if (k < 5) {
+            System.out.println(0);
+            return;
+        } else if (k == 26) {
+            System.out.println(n);
+            return;
+        }
 		comb(0, 0, 0);
 		System.out.println(maxValue);
 
