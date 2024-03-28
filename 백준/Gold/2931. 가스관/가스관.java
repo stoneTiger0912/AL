@@ -6,6 +6,9 @@ import java.util.ArrayDeque;
 import java.util.StringTokenizer;
 
 
+/**
+ *11640kb 80ms
+ */
 public class Main {
 
 	static int R, C;
@@ -25,13 +28,12 @@ public class Main {
 
 	static boolean[][] visited;
 
-	//빈칸의 상 하 좌 우 조건 넣기
-	static boolean[] check = new boolean[4];
 	static int resultR, resultC;
 
 	static int[] dr = {-1, 1, 0, 0};
 	static int[] dc = {0, 0, -1, 1};
 
+	
 	static void BFS() {
 		Queue<Node> queue = new ArrayDeque<>();
 		queue.offer(new Node(startR, startC));
@@ -45,6 +47,8 @@ public class Main {
 			int c = current.c;
 
 			boolean[] dir = new boolean[4];
+			
+			//각 조건 별로 탐색할 수 있는 방향이 정해짐
 			switch(graph[r][c]) {
 			case '|':
 				dir[0] = true;
@@ -75,7 +79,9 @@ public class Main {
 				dir[1] = true;
 				dir[2] = true;
 				break;
-
+				
+				
+			//mz는 시작시점과 끝지점이므로 모든 방향 탐색해야함
 			case 'Z':
 			case 'M':
 				for(int i=0; i<4;i++) {
@@ -84,6 +90,7 @@ public class Main {
 				break;
 			}
 
+			
 			for(int d=0; d<4;d++) {
 				if(!dir[d]) continue;
 
@@ -91,6 +98,7 @@ public class Main {
 				int nc = c+dc[d];
 				if(nr < 0 || nr >= R || nc < 0 || nc >= C) continue;
 
+				//1칸 이동했을 때 파이프가 존재하는지 체크 후 
 				if(check(nr, nc, d)) {
 					if(!visited[nr][nc]) {
 						queue.offer(new Node(nr, nc));
@@ -98,27 +106,12 @@ public class Main {
 					}
 				}
 
+				//없으면
 				else {
+					//만약 처음이나 끝이면 계속 탐색
 					if(graph[r][c] == 'M' || graph[r][c] == 'Z') continue;
 					else {
-						switch (d) {
-						case 0:
-							check[1] = true;
-							break;
-						case 1:
-
-							check[0] = true;
-							break;
-						case 2:
-
-							check[3] = true;
-							break;
-						case 3:
-							check[2] = true;
-
-							break;
-
-						}
+						//만약 없으면 그때 좌표값 저장 후 끝내기
 						resultR = nr;
 						resultC = nc;
 
@@ -132,6 +125,8 @@ public class Main {
 		}
 	}
 
+	
+	//체크하는 메서드
 	static boolean check(int nr, int nc, int d) {
 		switch (d) {
 		case 0:
@@ -201,6 +196,8 @@ public class Main {
 			int nc = resultC + dc[d];
 			if(nr < 0 || nr >=R || nc < 0 || nc >= C) continue;
 			boolean flag = check(nr, nc, d);
+			
+			//탐색하는 거 비트마스킹으로 체크
 			if(flag) {
 				if(graph[nr][nc] == 'M' || graph[nr][nc]=='Z') {
 					for(int dir=0; dir<4;dir++) {
