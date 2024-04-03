@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
+//252016kb 984ms
 public class Main {
 
 	static int[] parent;
@@ -17,7 +18,8 @@ public class Main {
 	static boolean union(int a, int b) {
 		a = find(a);
 		b = find(b);
-
+		
+		//같을 경우 사이클임
 		if(a==b) return true;
 		else {
 			if(a < b) parent[a] = b;
@@ -47,8 +49,12 @@ public class Main {
 
 			int a = Integer.parseInt(st.nextToken());
 			int b = Integer.parseInt(st.nextToken());			
+			//사이클이 아닐때만 해보기
 			if(result==0) {
-				if(union(a, b)) result = i+1;
+				if(union(a, b)) {
+					result = i+1;
+					break;
+				}
 			}
 		}
 		System.out.println(result);
