@@ -6,6 +6,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
+/**
+ * @author SSAFY
+ *11584kb 84ms
+ */
 public class Main {
 
 
@@ -44,6 +48,12 @@ public class Main {
 	static void backTrack(int idx, int[][] regionList) {
 
 		if(idx==gameCnt) {
+			for(int r=0;r<6;r++) {
+				for(int c=0; c<3;c++) {
+					if(regionList[r][c]!= 0) return;
+				}
+			}
+
 			result = 1;
 			return;
 		}
@@ -107,19 +117,16 @@ public class Main {
 			regionList = new int[6][3];
 			result = 0;
 			st = new StringTokenizer(br.readLine());
-			boolean flag = false;
 
 			for(int j=0; j<6;j++) {
 				regionList[j][0] = Integer.parseInt(st.nextToken());
 				regionList[j][1] = Integer.parseInt(st.nextToken());
 				regionList[j][2] = Integer.parseInt(st.nextToken());
-				if(regionList[j][0]>5 || regionList[j][1]>5 || regionList[j][2]>5) flag = true;
 			}
-			if(flag) sb.append(0).append(" ");
-			else {
-				backTrack(0, regionList);
-				sb.append(result).append(" ");
-			}
+
+			backTrack(0, regionList);
+			sb.append(result).append(" ");
+
 		}
 
 		System.out.println(sb);
