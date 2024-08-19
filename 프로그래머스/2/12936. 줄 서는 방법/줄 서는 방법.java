@@ -53,6 +53,11 @@ class Solution {
             answer[i] = (int) result[n-i-1];
         }
         
+//         List<Long> list = Arrays.toList(result);
+//         Collections.reverse(list);
+        
+//         int[] answer = list.toArray(new Integer[]);
+        
         
         return answer;
     }
