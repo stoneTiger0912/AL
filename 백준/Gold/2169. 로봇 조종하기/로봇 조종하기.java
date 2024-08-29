@@ -1,49 +1,81 @@
-import java.util.Scanner;
- 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+/**
+ * 
+ * 왼쪽으로 가는 경우 음수일 경우
+ * 한번 간 지역은 가지 않는다
+ * 1000x1000
+ * 맨마지막에서 하는 행동
+ * 1. 미지수 개수 확인 -> 왼쪽, 오른쪽, 위쪽 3개가 필요
+ * 3방향에서 오는 것들을 체크하는 것이 중요
+ * 오른쪽에서 오는 경우 
+ * 2. 마지막 행동 -> r-1 c, r c-1 둘 중 하나가 된다
+ * 
+ */
 public class Main {
-    static int N,M;
-    static int[][] mars;
-    static int[][] dp;
-    static int[][] temp;
- 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        N = sc.nextInt();
-        M = sc.nextInt();
-         
-        mars = new int[N+1][M+1];
-        dp = new int[N+1][M+1];
-        temp = new int[2][M+2];
-         
-        for(int i = 1; i <= N; i++) {
-            for(int j = 1; j <= M; j++){
-                mars[i][j] = sc.nextInt();
-            }
-        }
-         
-        dp[1][1] = mars[1][1];
-         
-        for(int j = 2; j <= M; j++) dp[1][j] = mars[1][j]+ dp[1][j-1];
-         
-        for(int i = 2; i <= N; i++) {
-             
-            temp[0][0] = dp[i-1][1];
-            for(int j = 1; j <= M; j++) {
-                temp[0][j] = Math.max(temp[0][j-1], dp[i-1][j])+ mars[i][j];
-            }
-             
-            temp[1][M+1] = dp[i-1][M];
-            for(int j = M; j >= 1; j--) {
-                temp[1][j] = Math.max(temp[1][j+1], dp[i-1][j]) + mars[i][j];
-            }
-             
-            for(int j = 1; j <= M; j++) {
-                dp[i][j] = Math.max(temp[0][j], temp[1][j]);
-            }
-        }
-        System.out.println(dp[N][M]);
-         
-        sc.close();
-    }
- 
+	
+	static int R, C;
+	static int[][] graph;
+	
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		R = Integer.parseInt(st.nextToken());
+		C = Integer.parseInt(st.nextToken());
+		
+		graph = new int[R+1][C+1];
+		int[][] dp = new int[R+1][C+1];
+		int[][] tmp = new int[2][C+2];
+		
+		for(int r=1; r<R+1;r++) {
+			st = new StringTokenizer(br.readLine());
+			for(int c=1; c<C+1;c++) {
+				graph[r][c] = Integer.parseInt(st.nextToken());
+			}
+		}
+//		print(graph);
+		
+		dp[1][1] = graph[1][1];
+		
+		for(int c=2;c<=C;c++) {
+			dp[1][c] = graph[1][c] + dp[1][c-1];
+		}
+		
+		for(int r=2; r<=R;r++) {
+			tmp[0][0] = dp[r-1][1];
+
+			//왼쪽에서 최대값
+			for(int c=1; c<=C;c++) {
+				tmp[0][c] = Math.max(tmp[0][c-1], dp[r-1][c]) + graph[r][c];
+			}
+			
+			//으론쪽에서 최대값
+			tmp[1][C+1] = dp[r-1][C];
+			for(int c=C; c>=1;c--) {
+				tmp[1][c] = Math.max(tmp[1][c+1], dp[r-1][c]) + graph[r][c];
+			}
+			
+			for(int c=1; c<=C;c++) {
+				dp[r][c] = Math.max(tmp[0][c], tmp[1][c]);
+			}
+		}
+		
+		System.out.println(dp[R][C]);
+		
+		
+	}
+	
+	static void print(int[][] graph) {
+		for(int[] r: graph) {
+			for(int c: r) {
+				System.out.print(c+" ");
+			}
+			System.out.println();
+		}
+		System.out.println();
+	}
 }
