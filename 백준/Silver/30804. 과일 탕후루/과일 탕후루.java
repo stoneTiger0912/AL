@@ -7,11 +7,9 @@ import java.util.StringTokenizer;
 
 /*
  * 투 포인터 사용
- * 맨 마지막과 맨 처음에 포인터를 줘서 개수가 적은 걸 먼저 지움
- * 
- * 단 투포인터로 할 경우 아래와 같은 문제가 발생
- * 5 5 5 1 1 1 1 2 1 -> 이거의 경우 5551111로 8개가나옴
- * 
+ * 시작 위치에서 2개의 포인터를 이용
+ * 1 1 2 2 3 1 -> 이거의 경우 1122로 4개가나옴
+ * 35676KB 344ms
  */
 public class Main {
 	
@@ -33,9 +31,11 @@ public class Main {
 		
 		int result = 1;
 		
+		//투포인터로 특정 조건에 만족할때까지 right를 움직이고 조건이 안맞으면 left를 움직이면 된다.
 		int left = 0;
 		int right = 0;
 		
+		//투포인터를 움직이면서 값을 저장하기 위해 사용
 		HashMap<Integer, Integer> map = new HashMap<>();
 		
 		
@@ -44,17 +44,23 @@ public class Main {
 //			System.out.println(left+" "+right);
 //			System.out.println(result);
 			
+			//사이즈가 2이하일 경우 
 			if(map.size() <= 2) {
+				//만약 과일이 존재한다면 기존값에 +1 추가
 				if(map.containsKey(input[right])) {
 					map.put(input[right], map.get(input[right])+1);
 				}
+				//그외에
 				else {
+					//만약 과일이 2개있는데 없는 과일일 경우 3개의 과일이 되므로 left를 움직여야함
 					if(map.size()==2) {
+						//left의 과일을 찾고 만약 개수가 1개면 map에서 삭제
 						int num = map.get(input[left]);
 //						System.out.println("num: "+num);
 						
 						if(num==1) map.remove(input[left]);
 						
+						//그외에는 -1을 한것을 저장
 						else {
 							map.put(input[left], num-1);
 						}
@@ -70,19 +76,20 @@ public class Main {
 				
 				right++;
 			}
-			else {
-				
-				int num = map.get(input[left]);
-//				System.out.println("num: "+num);
-				
-				if(num==1) map.remove(input[left]);
-				
-				else {
-					map.put(input[left], num-1);
-				}
-				
-				left++;
-			}
+//			else {
+//				
+//				//과일개수가 3개 이상일 경우
+//				int num = map.get(input[left]);
+////				System.out.println("num: "+num);
+//				
+//				if(num==1) map.remove(input[left]);
+//				
+//				else {
+//					map.put(input[left], num-1);
+//				}
+//				
+//				left++;
+//			}
 
 		}
 		
