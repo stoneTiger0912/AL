@@ -27,47 +27,70 @@ public class Main {
 			key[i] = i % 2 == 0 ? 1 : 0;
 		}
 		
-		int result = 0;
 		
-		int start = 0;
-		int end = 0;
-		A: while(start<len) {
+		int result = 0;
+		int cnt = 0;
+		
+		for(int i=0; i<len;i++) {
+			if(i + 2 >= len) {
+				break;
+			}
 			
-			if(arr[start]==0) start++;
-			else {
+			if(arr[i] == 1 && arr[i+1] == 0 && arr[i+2]==1) {
+				cnt++;
+				i++;
 				
-//				System.out.println(start);
-				
-				int cnt = 0;
-				end = start+1;
-				
-				while(true) {
-					
-					
-					if(cnt==N) {
-						result++;
-//						System.out.println(start+" result");
-						break;
-					}
-					
-					if(end+1 >= len) break;
-					
-					if(arr[end]==0 && arr[end+1]==1) {
-						cnt++;
-						end += 2;
-					}
-					else {
-						start++;
-						continue A;
-					}
-					
-					
+				if(cnt == N) {
+					result++;
+					cnt--;
 				}
-				
-				start += 2;
-				
+			}
+			else {
+				cnt = 0;
 			}
 		}
+		
+//		int start = 0;
+//		int end = 0;
+//		int cnt = 0;
+//		A: while(start<len) {
+//			
+//			if(arr[start]==0) start++;
+//			else {
+//				
+////				System.out.println(start);
+//				
+//				int cnt = 0;
+//				end = start+1;
+//				
+//				while(true) {
+//					
+//					
+//					if(cnt==N) {
+//						result++;
+////						System.out.println(start+" result");
+//						break;
+//					}
+//					
+//					if(end+1 >= len) break;
+//					
+//					if(arr[end]==0 && arr[end+1]==1) {
+//						cnt++;
+//						end += 2;
+//					}
+//					else {
+//						start++;
+//						continue A;
+//					}
+//					
+//					
+//				}
+//				
+//				start += 2;
+//				
+//				
+//			}
+//		}
 		
 		
 //		A: for(int i=0; i<len-(2*N+1);i++) {
