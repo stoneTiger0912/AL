@@ -7,92 +7,87 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
-
 public class Main {
-
-	static class Node implements Comparable<Node> {
-		int index;
-		int cost;
-
-		Node(int index, int cost) {
-			this.index = index;
-			this.cost = cost;
-
-		}
-
-		@Override
-		public int compareTo(Node o) {
-
-			return this.cost - o.cost;
-		}
-
-
-
-	}
-
-	static int n, m;
-	static int start, end;
-	static int[] distance;
-
+	
+	static final int MAX = Integer.MAX_VALUE;
+	
 	static List<Node>[] list;
-
-
-	static void dijstra(int start) {
+	static int N;
+	
+	static class Node implements Comparable<Node> {
+		int idx;
+		int distance;
+		
+		Node(int idx, int distance) {
+			this.idx = idx;
+			this.distance = distance;
+		}
+		
+		public int compareTo(Node o) {
+			return Integer.compare(this.distance, o.distance);
+		}
+	}
+	
+	static int Dijstra(int start, int end) {
 		PriorityQueue<Node> pq = new PriorityQueue<>();
-		distance[start] = 0;
-		pq.add(new Node(start, 0));
-
+		pq.offer(new Node(start, 0));
+		int[] visited = new int[N+1];
+		Arrays.fill(visited, MAX);
+		visited[start] = 0;
+		
 		while(!pq.isEmpty()) {
-			Node current = pq.poll();
-
-			int index = current.index;
-			int dist = current.cost;
-			if(distance[index] < dist) continue;
-
-			for (Node node : list[index]) {
-				int cost = dist + node.cost;
-				int next = node.index;
-				if(distance[next] > cost) {
-					distance[next] = cost;
-					pq.offer(new Node(next, cost));
+			Node n = pq.poll();
+			
+			int idx = n.idx;
+			int distance = n.distance;
+			
+			if(visited[idx] < distance) continue;
+			
+//			visited[idx] = distance;
+			
+			for(Node node: list[idx]) {
+				if(visited[node.idx] > distance + node.distance) {
+					visited[node.idx] = distance + node.distance;
+					pq.offer(new Node(node.idx, distance + node.distance));
+					
+//					System.out.println(Arrays.toString(visited));
 				}
 			}
+			
 		}
+		
+		return visited[end];
 	}
-
+	
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
-
-		n = Integer.parseInt(br.readLine());
-		m = Integer.parseInt(br.readLine());
-
-		distance = new int[n+1];
-
-		Arrays.fill(distance, Integer.MAX_VALUE);
-
-		list = new ArrayList[n+1];
-		for(int i=1;i<n+1;i++) {
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		
+		N = Integer.parseInt(st.nextToken());
+		st = new StringTokenizer(br.readLine());
+		int M = Integer.parseInt(st.nextToken());
+		
+		list = new List[N+1];
+		for(int i=1; i<N+1;i++) {
 			list[i] = new ArrayList<>();
 		}
-
-		for(int i=0; i<m;i++) {
+		
+		for(int i=0; i<M;i++) {
 			st = new StringTokenizer(br.readLine());
-			int first = Integer.parseInt(st.nextToken());
-			int second = Integer.parseInt(st.nextToken());
+			int s = Integer.parseInt(st.nextToken());
+			int e = Integer.parseInt(st.nextToken());
 			int cost = Integer.parseInt(st.nextToken());
-
-			list[first].add(new Node(second, cost));
+			
+			list[s].add(new Node(e, cost));
+			
 		}
-
-
+		
 		st = new StringTokenizer(br.readLine());
-		start = Integer.parseInt(st.nextToken());
-		end = Integer.parseInt(st.nextToken());
-
-		dijstra(start);
-
-		System.out.println(distance[end]);
-
+		int start = Integer.parseInt(st.nextToken());
+		int end = Integer.parseInt(st.nextToken());
+		
+		int result = Dijstra(start, end);
+		System.out.println(result);
+		
 	}
 }
