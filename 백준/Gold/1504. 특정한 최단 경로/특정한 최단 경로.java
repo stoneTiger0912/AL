@@ -9,51 +9,55 @@ import java.util.StringTokenizer;
 
 public class Main {
 	
-	static final int INF = 100_000_000;
-	
-	static int V, E;
-	
+	static int N, E;
 	static List<Node>[] list;
-	static int[] distance;
+	static int V1, V2;
+	static final int MAX = 1_000_000_000;
 	
 	static class Node implements Comparable<Node> {
-		int next;
+		int num;
 		int cost;
-		Node(int next, int cost) {
-			this.next = next;
+		
+		Node(int num, int cost) {
+			this.num = num;
 			this.cost = cost;
 		}
-		@Override
-		public int compareTo(Node o) {
-			return this.cost - o.cost;
-		}
 		
+		public int compareTo(Node n) {
+			return Integer.compare(this.cost, n.cost);
+		}
 	}
 	
-//	static int result = 0;
-	
 	static int Dijstra(int start, int end) {
-//		Arrays.fill(distance, Integer.MAX_VALUE);
-		Arrays.fill(distance, INF);
+		int[] distance = new int[N+1];
+		Arrays.fill(distance, MAX);
 		
-		PriorityQueue<Node> pq = new PriorityQueue<>();
+		PriorityQueue<Node> pq = new PriorityQueue<>(); 
+		
 		pq.offer(new Node(start, 0));
 		distance[start] = 0;
-		while (!pq.isEmpty()) {
-			Node current = pq.poll();
-			int idx = current.next;
-			int cost = current.cost;
-			for(int i=0; i<list[idx].size();i++) {
-				Node next = list[idx].get(i);
+		
+		while(!pq.isEmpty()) {
+			Node cur = pq.poll();
+			
+			int idx = cur.num;
+			int dir = cur.cost;
+			
+			if(distance[idx] < dir) continue;
+			
+			for(Node n:list[idx]) {
 				
-				int nextIdx = next.next;
-				int len = next.cost;
-				if(len+cost>distance[nextIdx]) continue;
-				distance[nextIdx] = len+cost;
-				pq.offer(new Node(nextIdx, distance[nextIdx]));
+				int next = n.num;
+				int cost =n.cost;
+				
+				if(distance[next] < dir+cost) continue;
+				
+				distance[next] = dir+cost;
+				pq.offer(new Node(next, distance[next]));
+				
 			}
+			
 		}
-//		result += distance[end];
 		
 		return distance[end];
 	}
@@ -61,48 +65,44 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		V = Integer.parseInt(st.nextToken());
+		
+		N = Integer.parseInt(st.nextToken());
 		E = Integer.parseInt(st.nextToken());
 		
-		list = new List[V+1];
-		distance = new int[V+1];
-
+		list = new List[N+1];
 		
-		for(int i=1; i<=V;i++) {
-			list[i]  = new ArrayList<>();
+		for(int i=1; i<N+1;i++) {
+			list[i] = new ArrayList<>();
 		}
 		
-		for(int i=0; i<E;i++) {
+ 		for(int i=0; i<E;i++) {
 			st = new StringTokenizer(br.readLine());
+			
 			int a = Integer.parseInt(st.nextToken());
 			int b = Integer.parseInt(st.nextToken());
 			int cost = Integer.parseInt(st.nextToken());
 			
-			list[a].add(new Node(b,cost));
+			list[a].add(new Node(b, cost));
 			list[b].add(new Node(a, cost));
-			
 		}
-		st = new StringTokenizer(br.readLine());
-		int first = Integer.parseInt(st.nextToken());
-		int second = Integer.parseInt(st.nextToken());
-		
-		int sum1 = 0;
-		sum1 += Dijstra(1, first);
-//		System.out.println(sum1);
-		sum1 += Dijstra(first, second);
-//		System.out.println(sum1);
-		sum1 += Dijstra(second, V);
-//		System.out.println(sum1);
-		
-		int sum2 = 0;
-		sum2 += Dijstra(1, second);
-		sum2 += Dijstra(second, first);
-		sum2 += Dijstra(first, V);
-		
-//		System.out.println(sum1+" "+sum2);
-		
-		if(sum1>= INF && sum2 >=INF) System.out.println(-1);
-		else System.out.println(Math.min(sum1, sum2));
+ 		
+ 		st = new StringTokenizer(br.readLine());
+ 		
+ 		V1 = Integer.parseInt(st.nextToken());
+ 		V2 = Integer.parseInt(st.nextToken());
+ 		
+ 		long first = 0;
+ 		first += Dijstra(1, V1);
+ 		first += Dijstra(V1, V2);
+ 		first += Dijstra(V2, N);
+ 		
+ 		long second = 0;
+ 		second += Dijstra(1, V2);
+ 		second += Dijstra(V2, V1);
+ 		second += Dijstra(V1, N);
+ 		
+ 		if((first>=MAX) && (second >= MAX)) System.out.println(-1);
+ 		else System.out.println(Math.min(first, second));
 		
 	}
 }
